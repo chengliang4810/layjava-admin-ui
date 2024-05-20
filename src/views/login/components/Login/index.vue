@@ -27,7 +27,7 @@ const rules = computed(() => {
   }
 })
 const formValue = ref({
-  account: 'super',
+  account: 'admin',
   pwd: '123456',
 })
 const isRemember = ref(false)
@@ -42,9 +42,12 @@ function handleLogin() {
     isLoading.value = true
     const { account, pwd } = formValue.value
 
-    if (isRemember.value)
+    if (isRemember.value){
       local.set('loginAccount', { account, pwd })
-    else local.remove('loginAccount')
+    }
+    else {
+      local.remove('loginAccount')
+    }
 
     await authStore.login(account, pwd)
     isLoading.value = false
@@ -83,10 +86,7 @@ function checkUserAccount() {
         </n-input>
       </n-form-item>
       <n-space vertical :size="20">
-        <div class="flex-y-center justify-between">
-          <n-checkbox v-model:checked="isRemember">
-            {{ $t('login.rememberMe') }}
-          </n-checkbox>
+        <div class="flex-y-center justify-end">
           <n-button type="primary" text @click="toOtherForm('resetPwd')">
             {{ $t('login.forgotPassword') }}
           </n-button>
@@ -94,34 +94,38 @@ function checkUserAccount() {
         <n-button block type="primary" size="large" :loading="isLoading" :disabled="isLoading" @click="handleLogin">
           {{ $t('login.signIn') }}
         </n-button>
-        <n-flex>
-          <n-text>{{ $t('login.noAccountText') }}</n-text>
-          <n-button type="primary" text @click="toOtherForm('register')">
-            {{ $t('login.signUp') }}
-          </n-button>
-        </n-flex>
+
+<!--        注册-->
+<!--        <n-flex>-->
+<!--          <n-text>{{ $t('login.noAccountText') }}</n-text>-->
+<!--          <n-button type="primary" text @click="toOtherForm('register')">-->
+<!--            {{ $t('login.signUp') }}-->
+<!--          </n-button>-->
+<!--        </n-flex>-->
       </n-space>
     </n-form>
-    <n-divider>
-      <span op-80>{{ $t('login.or') }}</span>
-    </n-divider>
-    <n-space justify="center">
-      <n-button circle>
-        <template #icon>
-          <n-icon><icon-park-outline-wechat /></n-icon>
-        </template>
-      </n-button>
-      <n-button circle>
-        <template #icon>
-          <n-icon><icon-park-outline-tencent-qq /></n-icon>
-        </template>
-      </n-button>
-      <n-button circle>
-        <template #icon>
-          <n-icon><icon-park-outline-github-one /></n-icon>
-        </template>
-      </n-button>
-    </n-space>
+
+<!--    有需要再做 -->
+<!--    <n-divider>-->
+<!--      <span op-80>{{ $t('login.or') }}</span>-->
+<!--    </n-divider>-->
+<!--    <n-space justify="center">-->
+<!--      <n-button circle>-->
+<!--        <template #icon>-->
+<!--          <n-icon><icon-park-outline-wechat /></n-icon>-->
+<!--        </template>-->
+<!--      </n-button>-->
+<!--      <n-button circle>-->
+<!--        <template #icon>-->
+<!--          <n-icon><icon-park-outline-tencent-qq /></n-icon>-->
+<!--        </template>-->
+<!--      </n-button>-->
+<!--      <n-button circle>-->
+<!--        <template #icon>-->
+<!--          <n-icon><icon-park-outline-github-one /></n-icon>-->
+<!--        </template>-->
+<!--      </n-button>-->
+<!--    </n-space>-->
   </div>
 </template>
 

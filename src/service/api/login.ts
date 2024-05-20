@@ -1,7 +1,16 @@
 import { request } from '../http'
 
 interface Ilogin {
-  userName: string
+  // 客户端 ID 用于标识 客户端类型
+  clientId: string
+  // 授权类型
+  grantType: string
+  // 请求唯一标识
+  uuid: string
+  // 验证码
+  code: string
+  // 账号密码
+  account: string
   password: string
 }
 
