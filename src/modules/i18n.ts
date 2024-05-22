@@ -6,8 +6,8 @@ import { local } from '@/utils'
 
 export const i18n = createI18n({
   legacy: false,
-  locale: local.get('lang') || 'enUS', // 默认显示语言
-  fallbackLocale: 'enUS',
+  locale: local.get('lang') || 'zhCN', // 默认显示语言
+  fallbackLocale: 'zhCN',
   messages: {
     zhCN,
     enUS,
