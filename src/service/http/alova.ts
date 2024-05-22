@@ -5,7 +5,6 @@ import { createServerTokenAuthentication } from '@alova/scene-vue'
 import qs from 'qs'
 import {
   handleBusinessError,
-  handleRefreshToken,
   handleResponseError,
   handleServiceResult,
 } from './handle'
@@ -25,7 +24,6 @@ const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthenticati
 
     // 当token过期时触发，在此函数中触发刷新token
     handler: async (_response, _method) => {
-      await handleRefreshToken()
     },
   },
   // 添加token到请求头

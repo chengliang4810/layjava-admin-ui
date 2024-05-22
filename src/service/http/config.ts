@@ -9,7 +9,7 @@ export const DEFAULT_ALOVA_OPTIONS = {
 export const DEFAULT_BACKEND_OPTIONS = {
   codeKey: 'code',
   dataKey: 'data',
-  msgKey: 'message',
+  msgKey: 'description',
   successCode: 200,
 }
 

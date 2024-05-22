@@ -1,34 +1,44 @@
 import { request } from '../http'
 
+const clientId = import.meta.env.VITE_CLIENT_ID
+
 interface Ilogin {
-  // 客户端 ID 用于标识 客户端类型
-  clientId: string
-  // 授权类型
-  grantType: string
   // 请求唯一标识
   uuid: string
-  // 验证码
-  code: string
+  // 授权类型
+  grantType: string
   // 账号密码
   account: string
   password: string
+  // 验证码
+  code?: string
 }
 
+/**
+ * 登录
+ * @param params 登录参数
+ */
 export function fetchLogin(params: Ilogin) {
-  const methodInstance = request.Post<Service.ResponseResult<ApiAuth.loginInfo>>('/login', params)
+  const methodInstance = request.Post<Service.ResponseResult<ApiAuth.loginInfo>>('/auth/login', {
+    clientId,
+    ...params,
+  })
   methodInstance.meta = {
     authRole: null,
   }
   return methodInstance
 }
-export function fetchUpdateToken(data: any) {
-  const method = request.Post<Service.ResponseResult<ApiAuth.loginInfo>>('/updateToken', data)
-  method.meta = {
-    authRole: 'refreshToken',
-  }
-  return method
+
+/**
+ * 获取用户信息
+ */
+export function fetchUserInfo() {
+  return request.Get<Service.ResponseResult<any> >('/system/user/info')
 }
 
-export function fetchUserRoutes(params: { id: number }) {
-  return request.Get<Service.ResponseResult<AppRoute.RowRoute[]> >('/getUserRoutes', { params })
+/**
+ * 获取用户路由
+ */
+export function fetchUserRoutes() {
+  return request.Get<Service.ResponseResult<AppRoute.RowRoute[]> >('/auth/getUserRoutes')
 }

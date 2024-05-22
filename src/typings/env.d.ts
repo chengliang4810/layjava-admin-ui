@@ -11,6 +11,8 @@ interface ImportMetaEnv {
   readonly VITE_BASE_URL: string
   /** 项目标题 */
   readonly VITE_APP_NAME: string
+  /** 客户端编号 */
+  readonly VITE_CLIENT_ID: string
   /** 开启请求代理 */
   readonly VITE_HTTP_PROXY?: 'Y' | 'N'
   /** 是否开启打包压缩 */

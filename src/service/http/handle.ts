@@ -2,9 +2,6 @@ import {
   ERROR_NO_TIP_STATUS,
   ERROR_STATUS,
 } from './config'
-import { useAuthStore } from '@/store'
-import { fetchUpdateToken } from '@/service'
-import { local } from '@/utils'
 
 type ErrorStatus = keyof typeof ERROR_STATUS
 
@@ -62,23 +59,6 @@ export function handleServiceResult(data: any, isSuccess: boolean = true) {
     ...data,
   }
   return result
-}
-
-/**
- * @description: 处理接口token刷新
- * @return {*}
- */
-export async function handleRefreshToken() {
-  const authStore = useAuthStore()
-  const { data } = await fetchUpdateToken({ refreshToken: local.get('refreshToken') })
-  if (data) {
-    local.set('accessToken', data.accessToken)
-    local.set('refreshToken', data.refreshToken)
-  }
-  else {
-    // 刷新失败，退出
-    await authStore.resetAuthStore()
-  }
 }
 
 export function showError(error: Service.RequestError) {

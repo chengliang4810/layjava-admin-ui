@@ -170,9 +170,7 @@ export const useRouteStore = defineStore('route-store', {
         }
 
         // Get user's route
-        const { data } = await fetchUserRoutes({
-          id: userInfo.id,
-        })
+        const { data } = await fetchUserRoutes()
 
         if (!data)
           return
