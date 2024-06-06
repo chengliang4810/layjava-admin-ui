@@ -2,6 +2,7 @@ import { createAlova } from 'alova'
 import VueHook from 'alova/vue'
 import GlobalFetch from 'alova/GlobalFetch'
 import { createServerTokenAuthentication } from '@alova/scene-vue'
+
 import {
   handleBusinessError,
   handleRefreshToken,
@@ -12,6 +13,7 @@ import {
   DEFAULT_ALOVA_OPTIONS,
   DEFAULT_BACKEND_OPTIONS,
 } from './config'
+import { useAuthStore } from '@/store'
 import { local } from '@/utils'
 
 const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthentication({
@@ -68,8 +70,14 @@ export function createAlovaInstance(
           // 返回json数据
           const apiData = await response.json()
           // 请求成功
-          if (apiData[_backendConfig.codeKey] === _backendConfig.successCode)
+          if (apiData[_backendConfig.codeKey] === _backendConfig.successCode) {
             return handleServiceResult(apiData)
+          }
+
+          else if (apiData[_backendConfig.codeKey] === 401) {
+            useAuthStore().resetAuthStore()
+            return
+          }
 
           // 业务请求失败
           const errorResult = handleBusinessError(apiData, _backendConfig)

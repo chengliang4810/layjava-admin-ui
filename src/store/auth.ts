@@ -1,11 +1,11 @@
 import { useRouteStore } from './route'
 import { useTabStore } from './tab'
-import { fetchLogin } from '@/service'
+import { fetchLogin, fetchUserInfo } from '@/service'
 import { router } from '@/router'
 import { local } from '@/utils'
 
 interface AuthStatus {
-  userInfo: Api.Login.Info | null
+  userInfo: Entity.User | null
   token: string
 }
 export const useAuthStore = defineStore('auth-store', {
@@ -52,9 +52,9 @@ export const useAuthStore = defineStore('auth-store', {
     },
 
     /* 用户登录 */
-    async login(userName: string, password: string) {
+    async login(userName: string, password: string, grantType: string) {
       try {
-        const { isSuccess, data } = await fetchLogin({ userName, password })
+        const { isSuccess, data } = await fetchLogin({ account: userName, password, grantType, uuid: new Date().getTime().toString() })
         if (!isSuccess)
           return
 
@@ -68,11 +68,13 @@ export const useAuthStore = defineStore('auth-store', {
     /* 登录后的处理函数 */
     async handleAfterLogin(data: Api.Login.Info) {
       // 将token和userInfo保存下来
-      local.set('userInfo', data)
       local.set('accessToken', data.accessToken)
       local.set('refreshToken', data.refreshToken)
       this.token = data.accessToken
-      this.userInfo = data
+
+      const { data: userData } = await fetchUserInfo()
+      local.set('userInfo', userData)
+      this.userInfo = userData
 
       // 添加路由和菜单
       const routeStore = useRouteStore()

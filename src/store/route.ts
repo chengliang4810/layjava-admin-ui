@@ -161,18 +161,16 @@ export const useRouteStore = defineStore('route-store', {
     },
     async initRouteInfo() {
       if (import.meta.env.VITE_AUTH_ROUTE_MODE === 'dynamic') {
-        const userInfo = local.get('userInfo')
+        const accessToken = local.get('accessToken')
 
-        if (!userInfo || !userInfo.id) {
+        if (!accessToken) {
           const authStore = useAuthStore()
           authStore.resetAuthStore()
           return
         }
 
         // Get user's route
-        const { data } = await fetchUserRoutes({
-          id: userInfo.id,
-        })
+        const { data } = await fetchUserRoutes()
 
         if (!data)
           return
