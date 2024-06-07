@@ -64,7 +64,11 @@ export const useAuthStore = defineStore('auth-store', {
       catch (e) {
       }
     },
-
+    async getUserInfo() {
+      const { data: userData } = await fetchUserInfo()
+      local.set('userInfo', userData)
+      this.userInfo = userData
+    },
     /* 处理登录返回的数据 */
     async handleLoginInfo(data: Api.Login.Info) {
       // 将token和userInfo保存下来
@@ -72,9 +76,8 @@ export const useAuthStore = defineStore('auth-store', {
       local.set('refreshToken', data.refreshToken)
       this.token = data.accessToken
 
-      const { data: userData } = await fetchUserInfo()
-      local.set('userInfo', userData)
-      this.userInfo = userData
+      // 加载用户信息
+      await this.getUserInfo()
 
       // 添加路由和菜单
       const routeStore = useRouteStore()

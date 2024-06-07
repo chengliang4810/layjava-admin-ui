@@ -13,7 +13,6 @@ import {
   DEFAULT_ALOVA_OPTIONS,
   DEFAULT_BACKEND_OPTIONS,
 } from './config'
-import { useAuthStore } from '@/store'
 import { local } from '@/utils'
 
 const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthentication({
@@ -61,7 +60,6 @@ export function createAlovaInstance(
       // 请求成功的拦截器
       onSuccess: async (response, method) => {
         const { status } = response
-
         if (status === 200) {
           // 返回blob数据
           if (method.meta?.isBlob)
@@ -70,14 +68,8 @@ export function createAlovaInstance(
           // 返回json数据
           const apiData = await response.json()
           // 请求成功
-          if (apiData[_backendConfig.codeKey] === _backendConfig.successCode) {
+          if (apiData[_backendConfig.codeKey] === _backendConfig.successCode)
             return handleServiceResult(apiData)
-          }
-
-          else if (apiData[_backendConfig.codeKey] === 401) {
-            useAuthStore().resetAuthStore()
-            return
-          }
 
           // 业务请求失败
           const errorResult = handleBusinessError(apiData, _backendConfig)

@@ -37,6 +37,14 @@ export function handleResponseError(response: Response) {
  */
 export function handleBusinessError(data: Record<string, any>, config: Required<Service.BackendConfig>) {
   const { codeKey, msgKey } = config
+
+  if (data[codeKey] === 401) {
+    const authStore = useAuthStore()
+    authStore.logout()
+    window.$message.warning('登录信息失效,请重新登录')
+    return
+  }
+
   const error: Service.RequestError = {
     errorType: 'Business Error',
     code: data[codeKey],
