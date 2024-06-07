@@ -41,7 +41,7 @@ export const useRouteStore = defineStore('route-store', {
 
         if (!accessToken) {
           const authStore = useAuthStore()
-          authStore.logOut()
+          authStore.logout()
           return
         }
 
