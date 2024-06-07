@@ -36,9 +36,6 @@
     "naive-ui-admin",
     "UnoCSS"
   ],
-  "engines": {
-    "node": ">= 20"
-  },
   "scripts": {
     "dev": "vite --mode dev --port 9980",
     "dev:test": "vite --mode test",
@@ -59,7 +56,6 @@
     "colord": "^2.9.3",
     "echarts": "^5.5.0",
     "md-editor-v3": "^4.15.2",
-    "performant-array-to-tree": "^1.11.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persist": "^1.0.0",
     "quill": "^2.0.2",
