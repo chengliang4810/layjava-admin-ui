@@ -76,10 +76,6 @@ export const useAuthStore = defineStore('auth-store', {
       local.set('accessToken', data.accessToken)
       local.set('refreshToken', data.refreshToken)
       this.token = data.accessToken
-
-      // 加载用户信息
-      await this.getUserInfo()
-
       // 添加路由和菜单
       const routeStore = useRouteStore()
       await routeStore.initAuthRoute()
