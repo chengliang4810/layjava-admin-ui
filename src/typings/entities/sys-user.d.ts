@@ -1,6 +1,7 @@
+/// <reference path="../global.d.ts"/>
 /**
-* 用户信息表 模块
-*/
+ * 用户信息表 模块
+ */
 namespace System {
   /** 用户信息表Vo */
   interface SysUserVo {
@@ -38,7 +39,7 @@ namespace System {
     remark?: string
   }
   /** 用户信息表Query */
-  interface SysUserQuery extends PageQuery{
+  interface SysUserQuery extends PageQuery {
     /** 用户ID */
     userId?: string
     /** 租户编号 */
@@ -72,12 +73,12 @@ namespace System {
     /** 备注 */
     remark?: string
     /**
-    * 拓展参数
-    */
-    params?: any;
+     * 拓展参数
+     */
+    params?: any
   }
   /** 用户信息表Form */
-  interface SysUserForm  extends BaseEntity{
+  interface SysUserForm extends BaseEntity {
     /** 用户ID */
     userId?: string
     /** 租户编号 */
