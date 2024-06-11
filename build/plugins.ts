@@ -41,6 +41,13 @@ export function createVitePlugins(env: ImportMetaEnv) {
             'useLoadingBar',
             'useModal',
           ],
+          '@/service/http': ['request'],
+        },
+        // 导入常用类型
+        {
+          from: 'naive-ui',
+          imports: ['DataTableColumns'],
+          type: true,
         },
       ],
       include: [
