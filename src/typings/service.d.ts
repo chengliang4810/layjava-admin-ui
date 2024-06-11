@@ -46,4 +46,15 @@ declare namespace Service {
     /** 返回的数据 */
     data: T
   }
+
+  /** 分页结果 */
+  interface PageData<T> {
+    rows: T[] = [],
+    total: number = 0
+  }
+
+  /** 分页响应结果 */
+  interface PageDataResult<T> extends ResponseResult<PageData<T>> {
+  }
+
 }
