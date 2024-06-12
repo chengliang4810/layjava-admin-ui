@@ -46,7 +46,7 @@ export function createVitePlugins(env: ImportMetaEnv) {
         // 导入常用类型
         {
           from: 'naive-ui',
-          imports: ['DataTableColumns'],
+          imports: ['DataTableColumns', 'FormInst', 'FormRules'],
           type: true,
         },
       ],

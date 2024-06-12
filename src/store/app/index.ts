@@ -19,7 +19,7 @@ export const useAppStore = defineStore('app-store', {
   state: () => {
     return {
       footerText: import.meta.env.VITE_COPYRIGHT_INFO,
-      lang: 'enUS' as App.lang,
+      lang: 'zhCN' as App.lang,
       theme: themeConfig as GlobalThemeOverrides,
       primaryColor: themeConfig.common.primaryColor,
       collapsed: false,

@@ -50,3 +50,20 @@ declare namespace Storage {
 declare namespace App {
   type lang = 'zhCN' | 'enUS'
 }
+
+declare global {
+
+  // 分页查询参数
+  interface PageQuery {
+    pageNum: number
+    pageSize: number
+  }
+
+  // 表单弹窗参数
+  interface FormModelProps {
+    show: boolean,
+    type: 'add' | 'update' | string,
+    title?: string
+  }
+}
+

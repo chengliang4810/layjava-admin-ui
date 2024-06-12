@@ -1,12 +1,11 @@
 <!-- 数据表格与分页简单的封装、适配后端分页参数、请求后端统一规范的数据 -->
-<script setup lang="ts" name="data-table">
+<script setup lang="ts" name="DataTable">
 import type { DataTableColumns } from 'naive-ui'
 import { useBoolean } from '@/hooks'
 import { request } from '@/service/http'
 
 // 组件参数声明
 export interface DataTableProps {
-  page?: number
   pageSize?: number
   rowKey?: string
   columns: DataTableColumns
@@ -22,6 +21,10 @@ const props = withDefaults(defineProps<DataTableProps>(), {
   rowKey: 'id',
   params: () => { return {} as Record<string, any> },
   modelValue: () => [],
+})
+
+defineExpose({
+  reload,
 })
 
 // 事件
@@ -53,8 +56,8 @@ function updateListData(data: any[]) {
  * 分页
  */
 const pagination = ref({
-  page: props.page,
-  pageSize: 15,
+  page: 1,
+  pageSize: 2,
   itemCount: 0,
 })
 
@@ -72,7 +75,7 @@ function rowKey(rowData: any) {
 async function requestPageData() {
   startLoading()
   // 请求数据
-  const { isSuccess, data } = await request.Get<Service.PageDataResult<any>>(props.url, { params: props.params })
+  const { isSuccess, data } = await request.Get<Service.PageDataResult<any>>(props.url, { params: { pageNum: pagination.value.page, pageSize: pagination.value.pageSize, ...props.params} })
   if (isSuccess) {
     updateListData(data.rows)
     pagination.value.itemCount = Number(data.total)
@@ -83,6 +86,26 @@ async function requestPageData() {
 onMounted(() => {
   requestPageData()
 })
+
+// 重新查询
+function reload() {
+  pagination.value.page = 1
+  requestPageData()
+}
+
+
+// 页码改变
+function handleUpdatePage(page: number){
+  pagination.value.page = page
+  requestPageData()
+}
+
+// 分页大小改变
+function handleUpdatePageSize(pageSize: number){
+  pagination.value.page = 1
+  pagination.value.pageSize = pageSize
+  requestPageData()
+}
 </script>
 
 <template>
@@ -95,6 +118,8 @@ onMounted(() => {
     :row-key="rowKey"
     :columns="computedColumns"
     :data="listData"
+    @update-page="handleUpdatePage"
+    @update-page-size="handleUpdatePageSize"
   />
 </template>
 
