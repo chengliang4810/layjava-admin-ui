@@ -2,7 +2,7 @@ import { request } from '../http'
 
 // 获取所有路由信息
 export function fetchAllRoutes() {
-  return request.Get<Service.ResponseResult<AppRoute.RowRoute[]> >('/getUserRoutes')
+  return request.Get<Service.ResponseResult<AppRoute.RowRoute[]> >('/system/menu/list')
 }
 
 // 获取所有用户信息

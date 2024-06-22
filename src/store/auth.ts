@@ -68,13 +68,14 @@ export const useAuthStore = defineStore('auth-store', {
       const { isSuccess, data: userData } = await fetchUserInfo()
       local.set('userInfo', userData)
       this.userInfo = userData
-      return isSuccess;
+      return isSuccess
     },
     /* 处理登录返回的数据 */
     async handleLoginInfo(data: Api.Login.Info) {
       // 将token和userInfo保存下来
+      console.log('accessToken', data)
       local.set('accessToken', data.accessToken)
-      local.set('refreshToken', data.refreshToken)
+      // local.set('refreshToken', data.refreshToken)
       this.token = data.accessToken
       // 添加路由和菜单
       const routeStore = useRouteStore()
