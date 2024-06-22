@@ -6,6 +6,7 @@ import HelpInfo from '@/components/common/HelpInfo.vue'
 import { useBoolean } from '@/hooks'
 import { Regex } from '@/constants'
 import { fetchRoleList } from '@/service'
+import { addSysMenu, updateSysMenu } from '@/api/system/sys-menu'
 
 interface Props {
   modalName?: string
@@ -24,7 +25,7 @@ const emit = defineEmits<{
 const { bool: modalVisible, setTrue: showModal, setFalse: hiddenModal } = useBoolean(false)
 const { bool: submitLoading, setTrue: startLoading, setFalse: endLoading } = useBoolean(false)
 
-const formDefault: AppRoute.RowRoute = {
+const formDefault: System.SysMenuForm = {
   name: '',
   path: '',
   id: -1,
@@ -36,8 +37,9 @@ const formDefault: AppRoute.RowRoute = {
   withoutTab: true,
   pinTab: false,
   menuType: 'page',
+  order: 0,
 }
-const formModel = ref<AppRoute.RowRoute>({ ...formDefault })
+const formModel = ref< System.SysMenuForm >({ ...formDefault })
 
 type ModalType = 'add' | 'view' | 'edit'
 const modalType = shallowRef<ModalType>('add')
@@ -50,7 +52,7 @@ const modalTitle = computed(() => {
   return `${titleMap[modalType.value]}${props.modalName}`
 })
 
-async function openModal(type: ModalType = 'add', data: AppRoute.RowRoute) {
+async function openModal(type: ModalType = 'add', data: System.SysMenuForm) {
   emit('open')
   modalType.value = type
   getRoleList()
@@ -87,20 +89,22 @@ const formRef = ref()
 async function submitModal() {
   const handlers = {
     async add() {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          window.$message.success('模拟新增成功')
-          resolve(true)
-        }, 2000)
-      })
+      const { isSuccess } = await addSysMenu(formModel.value)
+      if (isSuccess) {
+        window.$message.success('新增成功')
+        return true
+      }
+      endLoading()
+      return false
     },
     async edit() {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          window.$message.success('模拟编辑成功')
-          resolve(true)
-        }, 2000)
-      })
+      const { isSuccess } = await updateSysMenu(formModel.value)
+      if (isSuccess) {
+        window.$message.success('修改成功')
+        return true
+      }
+      endLoading()
+      return false
     },
     async view() {
       return true
@@ -189,18 +193,18 @@ async function getRoleList() {
             <HelpInfo message="不填写则为顶层菜单" />
           </template>
           <n-tree-select
-            v-model:value="formModel.parentId" filterable clearable :options="dirTreeOptions" key-field="id"
+            v-model:value="formModel.pid" filterable clearable :options="dirTreeOptions" key-field="id"
             label-field="title" children-field="children" placeholder="请选择父级目录"
           />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="1" label="菜单名称" path="name">
-          <n-input v-model:value="formModel.name" placeholder="Eg: system" />
+        <n-form-item-grid-item :span="1" label="菜单名称" path="title">
+          <n-input v-model:value="formModel.title" placeholder="例: 菜单" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="1" label="标题" path="title">
-          <n-input v-model:value="formModel.title" placeholder="Eg: My-System" />
+        <n-form-item-grid-item :span="1" label="菜单标识" path="name">
+          <n-input v-model:value="formModel.name" placeholder="例: system" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="2" label="路由路径" path="path">
-          <n-input v-model:value="formModel.path" placeholder="Eg: /system/user" />
+          <n-input v-model:value="formModel.path" placeholder="例: /system/user" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="1" label="菜单类型" path="menuType">
           <n-radio-group v-model:value="formModel.menuType" name="radiogroup">
@@ -218,7 +222,7 @@ async function getRoleList() {
           <icon-select v-model:value="formModel.icon" :disabled="modalType === 'view'" />
         </n-form-item-grid-item>
         <n-form-item-grid-item v-if="formModel.menuType === 'page'" :span="2" label="组件路径" path="componentPath">
-          <n-input v-model:value="formModel.componentPath" placeholder="Eg: /system/user/index.vue" />
+          <n-input v-model:value="formModel.componentPath" placeholder="例: /system/user/index.vue" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="1" path="order">
           <template #label>
@@ -232,7 +236,7 @@ async function getRoleList() {
             外链页面
             <HelpInfo message="填写后，点击菜单将跳转到该地址，组件路径任意填写" />
           </template>
-          <n-input v-model:value="formModel.href" placeholder="Eg: https://example.com" />
+          <n-input v-model:value="formModel.href" placeholder="例: https://example.com" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="1" label="登录访问" path="requiresAuth">
           <n-switch v-model:value="formModel.requiresAuth" />

@@ -6,11 +6,13 @@ import { fetchAllRoutes } from '@/service'
 import { useBoolean } from '@/hooks'
 import { arrayToTree, createIcon } from '@/utils'
 import CopyText from '@/components/custom/CopyText.vue'
+import { deleteSysMenu } from '@/api/system/sys-menu'
 
+const dataTable = ref()
 const { bool: loading, setTrue: startLoading, setFalse: endLoading } = useBoolean(false)
 
 function deleteData(id: number) {
-  window.$message.success(`删除菜单id:${id}`)
+  deleteMenu(id)
 }
 
 const tableModalRef = ref()
@@ -127,7 +129,19 @@ async function getAllRoutes() {
 
 const checkedRowKeys = ref<number[]>([])
 async function handlePositiveClick() {
-  window.$message.success(`批量删除id:${checkedRowKeys.value.join(',')}`)
+  deleteMenu(checkedRowKeys.value)
+}
+
+async function deleteMenu(id: number | number[]) {
+  const { isSuccess } = await deleteSysMenu(id)
+  if (isSuccess) {
+    window.$message.success(`删除成功`)
+    getAllRoutes()
+  }
+}
+
+function handleCloseModal() {
+  getAllRoutes()
 }
 </script>
 
@@ -164,6 +178,7 @@ async function handlePositiveClick() {
         </NPopconfirm>
       </div>
       <n-data-table
+        ref="dataTable"
         v-model:checked-row-keys="checkedRowKeys"
         class="flex-1"
         :row-key="(row:AppRoute.RowRoute) => row.id" :columns="columns" :data="tableData"
@@ -172,7 +187,7 @@ async function handlePositiveClick() {
         flex-height
         :scroll-x="1200"
       />
-      <TableModal ref="tableModalRef" :all-routes="tableData" modal-name="菜单" />
+      <TableModal ref="tableModalRef" :all-routes="tableData" modal-name="菜单" @close="handleCloseModal" />
     </n-card>
   </div>
 </template>

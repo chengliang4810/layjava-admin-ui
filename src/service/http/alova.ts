@@ -17,24 +17,23 @@ import { local } from '@/utils'
 
 const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthentication({
   // 服务端判定token过期
-  // refreshTokenOnSuccess: {
-  //   // 当服务端返回401时，表示token过期
-  //   isExpired: (response, method) => {
-  //     const isExpired = method.meta && method.meta.isExpired
-  //     return response.status === 401 && !isExpired
-  //   },
+  refreshTokenOnSuccess: {
+    // 当服务端返回401时，表示token过期
+    isExpired: (response, method) => {
+      const isExpired = method.meta && method.meta.isExpired
+      return response.status === 401 && !isExpired
+    },
+    // 当token过期时触发，在此函数中触发刷新token
+    handler: async (_response, method) => {
+      // 此处采取限制，防止过期请求无限循环重发
+      if (!method.meta)
+        method.meta = { isExpired: true }
+      else
+        method.meta.isExpired = true
 
-  //   // 当token过期时触发，在此函数中触发刷新token
-  //   handler: async (_response, method) => {
-  //     // 此处采取限制，防止过期请求无限循环重发
-  //     if (!method.meta)
-  //       method.meta = { isExpired: true }
-  //     else
-  //       method.meta.isExpired = true
-
-  //     await handleRefreshToken()
-  //   },
-  // },
+      //  await handleRefreshToken()
+    },
+  },
   // 添加token到请求头
   assignToken: (method) => {
     method.config.headers.Authorization = `Bearer ${local.get('accessToken')}`
