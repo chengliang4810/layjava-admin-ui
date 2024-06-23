@@ -28,7 +28,7 @@ const { bool: submitLoading, setTrue: startLoading, setFalse: endLoading } = use
 const formDefault: System.SysMenuForm = {
   name: '',
   path: '',
-  id: -1,
+  id: undefined,
   pid: null,
   title: '',
   requiresAuth: true,
