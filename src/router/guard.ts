@@ -1,5 +1,6 @@
 import type { Router } from 'vue-router'
 import { useAppStore, useAuthStore, useRouteStore, useTabStore } from '@/store'
+import { local } from '@/utils'
 
 const title = import.meta.env.VITE_APP_NAME
 
@@ -17,9 +18,8 @@ export function setupRouterGuard(router: Router) {
     // 开始 loadingBar
     appStore.showProgress && window.$loadingBar?.start()
 
-    // 判断有无TOKEN,登录鉴权 , 单纯判断本地的是否存在token/user信息作为是否已登录的条件并不严谨，无法验证token是否依然有效
-    // const isLogin = Boolean(local.get('accessToken'))
-    const isLogin = await useAuthStore().getUserInfo();
+    const isLogin = Boolean(local.get('accessToken'))
+
     if (!isLogin) {
       if (to.name === 'login')
         next()

@@ -73,7 +73,6 @@ export const useAuthStore = defineStore('auth-store', {
     /* 处理登录返回的数据 */
     async handleLoginInfo(data: Api.Login.Info) {
       // 将token和userInfo保存下来
-      console.log('accessToken', data)
       local.set('accessToken', data.accessToken)
       // local.set('refreshToken', data.refreshToken)
       this.token = data.accessToken
